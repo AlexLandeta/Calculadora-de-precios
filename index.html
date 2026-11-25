@@ -348,7 +348,7 @@
             id="cp"
             inputmode="numeric"
             maxlength="5"
-            placeholder="Ej. 28033, 28006, 28801, 28901..."
+            placeholder="Ej. 28033, 28100, 28006, 28801..."
             autocomplete="postal-code"
           />
           <div id="cpStatus" class="cp-status" role="status" aria-live="polite">
@@ -364,7 +364,7 @@
             <label class="radio-card active" id="cardEstandar">
               <input type="radio" name="plazo" value="estandar" checked />
               <span>
-                <span class="radio-title">Estándar (3–4 días hábiles)</span>
+                <span class="radio-title">Estándar (5 días hábiles, de lunes a viernes)</span>
                 <span class="radio-desc">Sin suplemento (0 €)</span>
               </span>
             </label>
@@ -376,6 +376,7 @@
               </span>
             </label>
           </div>
+          <div class="hint">Horario de visitas y mediciones: de <strong>9:30 a 18:30</strong>, sujeto a disponibilidad.</div>
         </div>
       </section>
 
@@ -472,12 +473,15 @@
         };
       }
 
-      // Entorno inmediato a 28033 y accesos cercanos sin atascos gruesos (0 €)
-      const entornoInmediato = new Set([28033, 28043, 28055]);
+      // Entorno inmediato (28033, 28043, 28055) y Alcobendas (28100, 28108, 28109) sin incremento (0 €)
+      const entornoInmediato = new Set([28033, 28043, 28055, 28100, 28108, 28109]);
       if (entornoInmediato.has(cpNum)) {
+        const esAlcobendas = cpNum >= 28100 && cpNum <= 28109;
         return {
           suplemento: 0,
-          ubicacion: `CP ${limpio} · Entorno inmediato`,
+          ubicacion: esAlcobendas
+            ? `CP ${limpio} · Alcobendas (entorno sin incremento)`
+            : `CP ${limpio} · Entorno inmediato`,
           etiqueta: `CP ${limpio}`,
           aviso: false
         };
@@ -590,7 +594,7 @@
       const tipoTexto = elTipologia.options[elTipologia.selectedIndex].text;
       const supTexto = elSuperficie.options[elSuperficie.selectedIndex].text;
       const cpTexto = elCp.value.trim() || "No indicado";
-      const plazoTexto = getPlazoSeleccionado() === "urgente" ? "Urgente (24–48 h)" : "Estándar (3–4 días hábiles)";
+      const plazoTexto = getPlazoSeleccionado() === "urgente" ? "Urgente (24–48 h)" : "Estándar (5 días hábiles, de lunes a viernes)";
 
       const texto = [
         "Presupuesto Certificado de Eficiencia Energética (Madrid)",
